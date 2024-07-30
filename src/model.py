@@ -12,9 +12,7 @@ with open ("out.txt", "r", encoding = "utf-8") as f:
     raw_text = f.read()
 print(raw_text[0:200])
 vocab = list(set(raw_text.split(' ')))
-    
-print(vocab[0:250])
-exit()
+
 print("Dataset has " + str(len(vocab)) + " unique words")
 
 ids_from_words = tf.keras.layers.StringLookup(vocabulary=list(vocab),mask_token=None)
