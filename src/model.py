@@ -65,8 +65,10 @@ if __name__=="__main__":
     print("Commencing tokenization...")
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(text_sequences)
+    vocab_size = len(tokenizer.word_counts)
     sequences = tokenizer.texts_to_sequences(text_sequences)
-
+    sequences = np.array(sequences)
+    
     # split vocab into train/test set
     X = sequences[:, :-1]
     y = sequences[:,-1]
