@@ -41,37 +41,43 @@ def generate_text(model, tokenizer, seq_len, seed_text, num_words=100):
         out_text.append(pred_word)
     return out_text
 
-with open ("out.txt", "r", encoding = "utf-8") as f:
-    raw_text = f.read()
-print(raw_text[0:200])
-tokens = []
-clean_text = raw_text.lower()
-clean_text = clean_text.split(' ')
-for word in clean_text:
-    if word != '':
-        tokens.append(word)
+if __name__=="__main__":
+    
+    with open ("out.txt", "r", encoding = "utf-8") as f:
+        raw_text = f.read()
+    print(raw_text[0:200])
+    tokens = []
+    clean_text = raw_text.lower()
+    clean_text = clean_text.split(' ')
+    for word in clean_text:
+        if word != '':
+            tokens.append(word)
+    # I had to limit the size of this dataset; my VM currently cannot handle something this big.
+    tokens = tokens[(len(tokens)-400000):len(tokens)]
+    print("Dataset has " + str(len(list(set(tokens)))) + " unique words")
+    print("Setting up sequences...")
+    train_len = 25+1
+    text_sequences = []
+    for i in range(train_len, len(tokens)):
+        seq = tokens[i-train_len:i]
+        text_sequences.append(seq)
 
-print("Dataset has " + str(len(list(set(tokens)))) + " unique words")
+    print("Commencing tokenization...")
+    tokenizer = Tokenizer()
+    tokenizer.fit_on_texts(text_sequences)
+    sequences = tokenizer.texts_to_sequences(text_sequences)
 
-train_len = 25+1
-text_sequences = []
-for i in range(train_len, len(tokens)):
-    seq = tokens[i-train_len:i]
-    text_sequences.append(seq)
+    # split vocab into train/test set
+    X = sequences[:, :-1]
+    y = sequences[:,-1]
+    y = to_categorical(y, num_classes=vocab_size+1)
 
-tokenizer = Tokenizer()
-tokenizer.fit_on_texts(text_sequences)
-sequences = tokenizer.texts_to_sequences(text_sequences)
+    print("Training.")
+    # train model
+    model = generate_model(vocab_size, seq_len)
+    model.fit(X,y, batch_size=128, epochs=300, verbose=1)
 
-# split vocab into train/test set
-X = sequences[:, :-1]
-y = sequences[:,-1]
-y = to_categorical(y, num_classes=vocab_size+1)
-
-# train model
-model.fit(X,y, batch_size=128, epochs=300, verbose=1)
-
-seed_text = ''.join(text_sequences[0])
-print("SEED TEXT: \n " + seed_text)
-s = generate_text(model, tokenizer, seq_len, seed_text = seed_text)
-print(s)
+    seed_text = ''.join(text_sequences[0])
+    print("SEED TEXT: \n " + seed_text)
+    s = generate_text(model, tokenizer, seq_len, seed_text = seed_text)
+    print(s)
