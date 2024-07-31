@@ -19,7 +19,7 @@ def generate_model(vocab_size, seq_len):
     model.add(Embedding(vocab_size, 25, input_length = seq_len))
     model.add(LSTM(150, return_sequences=True))
     model.add(LSTM(150))
-    model.add(Dense(150), activation='relu')
+    model.add(Dense(150, activation='relu'))
     model.add(Dense(vocab_size, activation='softmax'))
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     model.summary()
@@ -53,7 +53,7 @@ if __name__=="__main__":
         if word != '':
             tokens.append(word)
     # I had to limit the size of this dataset; my VM currently cannot handle something this big.
-    tokens = tokens[(len(tokens)-400000):len(tokens)]
+    tokens = tokens[(len(tokens)-50000):len(tokens)]
     print("Dataset has " + str(len(list(set(tokens)))) + " unique words")
     print("Setting up sequences...")
     train_len = 25+1
@@ -62,6 +62,7 @@ if __name__=="__main__":
         seq = tokens[i-train_len:i]
         text_sequences.append(seq)
 
+    seq_len = len(text_sequences)
     print("Commencing tokenization...")
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(text_sequences)
