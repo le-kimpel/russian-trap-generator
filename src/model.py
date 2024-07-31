@@ -25,6 +25,22 @@ def generate_model(vocab_size, seq_len):
     model.summary()
     return model
 
+def generate_text(model, tokenizer, seq_len, seed_text, num_words=100):
+    '''
+     Generate a paragraph of about 100 words (default) by individually predicting the occurance of each word using the model, and appending to a string.
+    '''
+    out_text = []
+    in_text = seed_text
+    for i in range(num_words):
+        encoded_text = tokenizer.texts_to_sequences([input_text])[0]
+        pad_encoded = pad_sequences([encoded_text], maxlen=seq_len, truncating='pre')
+        predictX = model.predict(pad_encoded, verbose=0)[0]
+        pred_word_ind = np.argmax(predictX)
+        pred_word = tokenizer.index_word[pred_word_ind]
+        in_text += ' ' + pred_word
+        out_text.append(pred_word)
+    return out_text
+
 with open ("out.txt", "r", encoding = "utf-8") as f:
     raw_text = f.read()
 print(raw_text[0:200])
