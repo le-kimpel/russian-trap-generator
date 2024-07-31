@@ -70,3 +70,8 @@ y = to_categorical(y, num_classes=vocab_size+1)
 
 # train model
 model.fit(X,y, batch_size=128, epochs=300, verbose=1)
+
+seed_text = ''.join(text_sequences[0])
+print("SEED TEXT: \n " + seed_text)
+s = generate_text(model, tokenizer, seq_len, seed_text = seed_text)
+print(s)
