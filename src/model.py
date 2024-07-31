@@ -9,14 +9,14 @@ model.py
 
 Trains an LSTM to spit out various russian-language song lyrics. 
 '''
-def generate_model(vocab_size, seq_len):
+def generate_model(vocab_size):
     '''
     Generates an LSTM with an Embedding layer, two LSTM layers, and two dense layers. This is the default model using the tutorial provided by:
 
     https://medium.com/@govardhanspace/text-generation-using-lstm-with-keras-in-python-ba5e492bedfa
     '''
     model = Sequential()
-    model.add(Embedding(vocab_size, 25, input_length = seq_len))
+    model.add(Embedding(vocab_size, 25))
     model.add(LSTM(150, return_sequences=True))
     model.add(LSTM(150))
     model.add(Dense(150, activation='relu'))
@@ -62,7 +62,6 @@ if __name__=="__main__":
         seq = tokens[i-train_len:i]
         text_sequences.append(seq)
 
-    seq_len = len(text_sequences)
     print("Commencing tokenization...")
     tokenizer = Tokenizer()
     tokenizer.fit_on_texts(text_sequences)
@@ -77,7 +76,7 @@ if __name__=="__main__":
 
     print("Training.")
     # train model
-    model = generate_model(vocab_size, seq_len)
+    model = generate_model(vocab_size)
     model.fit(X,y, batch_size=128, epochs=300, verbose=1)
 
     seed_text = ''.join(text_sequences[0])
