@@ -1,7 +1,7 @@
 # russian-trap-generator
 Silly side project where I play around with generating Russian rap-song text. Studying a language is more fun when you play around with it in its foulest, least-grammatical, most-inventive forms.
 
-I use a tensorflow LSTM (Long-Short Term Memory) RNN to generate about 100 words of Russian-language text (given some seed text), which is pulled from a large dataset of complete rap song lyrics. 
+I use a tensorflow (keras) LSTM (Long-Short Term Memory) RNN to generate about 100 words of Russian-language text (given some seed text), which is pulled from a large dataset of complete rap song lyrics. 
 Disclaimer: the dataset also contains English-language words (and probably words from other languages as well.) I didn't filter those out - instead, having never played around with mixed-language datasets, I kept the non-Russian tokens. We'll see what that yields, probably something funny.
 
 ### Link to the Kaggle dataset: 
